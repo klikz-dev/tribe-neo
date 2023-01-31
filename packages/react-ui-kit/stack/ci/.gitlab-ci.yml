@@ -1,0 +1,68 @@
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍ Pipeline Stages ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+# ╭─ Build ───────────────────────────────────────────╮
+# │
+storybook:build:
+  stage: build
+  extends:
+    - .commonProperty
+  needs:
+    - prepare:env
+    - prepare:packages
+    - job: prepare:cache
+      optional: true
+  script:
+    - |
+      if [[ $REACT_UI_KIT_CHANGED ]]; then
+        echo "Building Storybook..."
+        yarn react-ui-kit build-storybook
+      fi
+  cache:
+    - !reference [.onlyPullCache, cache]
+    - key: "sotrybook-cache-$CI_COMMIT_REF_SLUG"
+      paths:
+        - $CI_PROJECT_DIR/packages/react-ui-kit/storybook-static
+      policy: pull-push
+  artifacts:
+    paths:
+      - ./packages/react-ui-kit/storybook-static
+    expire_in: 1 week
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_MR
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Publish ─────────────────────────────────────────╮
+# │
+storybook:publish:
+  extends:
+    - .publishAssetsTemplate
+  variables:
+    LOCAL_BUILD_PATH: packages/react-ui-kit/storybook-static
+    REMOTE_BUILD_PATH: /
+    BUCKET: tribe-neo-storybook-dev-v2
+  needs:
+    - storybook:build
+  rules:
+    - if: $IS_DEFAULT
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Promote ─────────────────────────────────────────╮
+# │
+react-ui-kit:promote:
+  extends:
+    - .promoteTemplate
+  variables:
+    LOCAL_PACKAGE_NAME: react-ui-kit
+  needs:
+    - job: prepare:packages
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_REACT_UI_KIT
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯

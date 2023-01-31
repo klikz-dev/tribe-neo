@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "es2020",
+    "jsx": "react-jsx",
+    "outDir": "dist",
+    "rootDir": "."
+  },
+  "include": ["src/**/*", "tests/**/*"],
+  "references": [
+    { "path": "../react-sdk" },
+    { "path": "../gql-client" },
+    { "path": "../react-ui-kit" }
+  ]
+}

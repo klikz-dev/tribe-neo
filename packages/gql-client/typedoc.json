@@ -1,0 +1,8 @@
+{
+  "entryPoints": ["./src/client.ts", "./src/clients"],
+  "exclude": ["./src/graphql/**.ts", "./src/types/**.ts"],
+  "entryPointStrategy": "Resolve",
+  "gitRevision": "master",
+  "excludePrivate": true,
+  "excludeProtected": true
+}

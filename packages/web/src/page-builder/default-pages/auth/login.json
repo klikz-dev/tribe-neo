@@ -1,0 +1,23 @@
+{
+  "slug": "login",
+  "type": "SYSTEM",
+  "address": {
+    "path": "/auth/login",
+    "exact": true,
+    "editable": false
+  },
+  "layout": "CLASSIC",
+  "seoDetail": {
+    "title": "Log in"
+  },
+  "slate": {
+    "id": "PAGE::login",
+    "rootComponents": ["DFh437vb0sadgag"],
+    "components": [
+      {
+        "id": "DFh437vb0sadgag",
+        "name": "Login"
+      }
+    ]
+  }
+}

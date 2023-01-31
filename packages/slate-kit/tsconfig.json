@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "incremental": true,
+    "jsx": "react-jsx",
+    "target": "es2017",
+    "outDir": "dist",
+    "rootDir": "src",
+    "typeRoots": [
+      "./src/index",
+      "./src/components",
+      "./src/dtos",
+      "./src/enums",
+      "./src/types",
+      "./src/hooks",
+      "./src/utils",
+      "./src/convertors"
+    ],
+    "types": ["node", "jest"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
+  "exclude": ["test/**/*", "node_modules", "jest.config.ts", "dist/**/*"]
+}

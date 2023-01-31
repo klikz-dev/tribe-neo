@@ -1,0 +1,38 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "allowUmdGlobalAccess": true, // make typescript work with ProvidePlugin
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "dom"],
+    "moduleResolution": "node",
+    "module": "esnext",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5"
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "jest",
+    "razzle.config.js",
+    "public"
+  ],
+  "include": ["src", "typings", "src/**/*.json", "src/@types"],
+  "references": [
+    {
+      "path": "../react-sdk"
+    },
+    {
+      "path": "../gql-client"
+    },
+    {
+      "path": "../react-ui-kit"
+    },
+    {
+      "path": "../slate-kit"
+    }
+  ]
+}

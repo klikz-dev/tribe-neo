@@ -1,0 +1,49 @@
+[
+  {
+    "key": "age",
+    "name": "Age",
+    "type": "number",
+    "hint": "Your age in years",
+    "sampleData": 30,
+    "settings": {
+      "view": "integer"
+    }
+  },
+  {
+    "key": "membership-date",
+    "name": "Membership Date",
+    "type": "date",
+    "sampleData": "2021-01-01",
+    "settings": {
+      "view": "date"
+    }
+  },
+  {
+    "key": "location",
+    "name": "Location",
+    "type": "text",
+    "placeholder": "Toronto, Canada",
+    "sampleData": "Toronto, Canada",
+    "settings": {
+      "view": "shorttext"
+    }
+  },
+  {
+    "key": "website",
+    "name": "Website",
+    "type": "text",
+    "sampleData": "https://tribe.so",
+    "settings": {
+      "view": "url"
+    }
+  },
+  {
+    "key": "about",
+    "name": "About",
+    "type": "text",
+    "sampleData": "Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim incididunt cillum culpa consequat. Excepteur qui ipsum aliquip consequat sint. ",
+    "settings": {
+      "view": "longtext"
+    }
+  }
+]

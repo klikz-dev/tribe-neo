@@ -1,0 +1,7 @@
+Web,packages/web,app
+Dev Portal,packages/dev-portal,app
+Portal,packages/portal,app
+React SDK,packages/react-sdk,base
+React UI-Kit,packages/react-ui-kit,base
+Slate Kit,packages/slate-kit,base
+GQL Client,packages/gql-client,base

@@ -1,0 +1,17 @@
+# ╭─ Promote ─────────────────────────────────────────╮
+# │
+react-sdk:promote:
+  extends:
+    - .promoteTemplate
+  variables:
+    LOCAL_PACKAGE_NAME: react-sdk
+  needs:
+    - job: prepare:packages
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_REACT_SDK
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯

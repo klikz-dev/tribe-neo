@@ -1,0 +1,440 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Network GraphQL Fields should return correct fields 1`] = `
+"
+    id
+    companyName
+    name
+    description
+    visibility
+    membership
+    logoId
+    faviconId
+    locale
+    domain
+    newDomain
+    incidentEmails
+    privacyPolicyUrl
+    termsOfServiceUrl
+    brandColor
+    billingEmail
+    status
+    memberCapacity
+    seatsCapacity
+    additionalSeatsCapacity
+    seatCapacityDeclared
+    tribeBranding
+    whoCanInviteIds
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  "
+`;
+
+exports[`Network GraphQL Fields should return correct fields 2`] = `
+"
+    id
+    companyName
+    name
+    description
+    visibility
+    membership
+    logoId
+    faviconId
+    locale
+    domain
+    newDomain
+    incidentEmails
+    privacyPolicyUrl
+    termsOfServiceUrl
+    brandColor
+    billingEmail
+    status
+    memberCapacity
+    seatsCapacity
+    additionalSeatsCapacity
+    seatCapacityDeclared
+    tribeBranding
+    whoCanInviteIds
+    
+      themes {
+        
+    active {
+      name
+      status
+      tokens {
+        colors {
+          key
+          value
+        }
+      }
+    }
+  
+      }
+    
+    
+      topNavigation {
+        
+    enabled
+    items {
+      link
+      openInNewWindow
+      text
+      type
+    }
+  
+      }
+    
+    
+      logo {
+        
+      ... on Image {
+        
+    __typename
+    id
+    url
+    width
+    height
+    dominantColorHex
+    dpi
+    cropHeight
+    cropWidth
+    cropX
+    cropY
+    cropZoom
+    urls {
+      full
+      large
+      medium
+      small
+      thumb
+    }
+  
+      }
+      ... on Emoji {
+        
+    __typename
+    id
+    text
+  
+      }
+  
+      }
+    
+    
+      favicon {
+        
+      ... on Image {
+        
+    __typename
+    id
+    url
+    width
+    height
+    dominantColorHex
+    dpi
+    cropHeight
+    cropWidth
+    cropX
+    cropY
+    cropZoom
+    urls {
+      full
+      large
+      medium
+      small
+      thumb
+    }
+  
+      }
+      ... on Emoji {
+        
+    __typename
+    id
+    text
+  
+      }
+  
+      }
+    
+    
+      whoCanInvite {
+        
+    id
+    name
+    type
+    description
+    visible
+    scopes
+  
+      }
+    
+    
+      defaultSpaces {
+        
+    id
+    name
+    description
+    slug
+    spaceTypeId
+    createdById
+    groupId
+    imageId
+    bannerId
+    membersCount
+    createdAt
+    private
+    hidden
+    inviteOnly
+    nonAdminsCanInvite
+    customOrderingIndexInGroup
+    
+    
+        
+        
+        
+    
+       
+     
+  
+      }
+    
+    
+      roles {
+        
+    id
+    name
+    type
+    description
+    visible
+    scopes
+  
+      }
+    
+    
+      customCodes(anonymize: false) {
+        
+    anonymize
+    position
+    code
+  
+      }
+    
+    
+      authMemberProps {
+        
+    context
+    scopes
+    
+  
+      }
+    
+  "
+`;
+
+exports[`Network GraphQL Fields should return correct fields 3`] = `
+"
+    id
+    companyName
+    name
+    description
+    visibility
+    membership
+    logoId
+    faviconId
+    locale
+    domain
+    newDomain
+    incidentEmails
+    privacyPolicyUrl
+    termsOfServiceUrl
+    brandColor
+    billingEmail
+    status
+    memberCapacity
+    seatsCapacity
+    additionalSeatsCapacity
+    seatCapacityDeclared
+    tribeBranding
+    whoCanInviteIds
+    
+    
+    
+    
+    
+    
+      defaultSpaces {
+        
+    id
+    name
+    description
+    slug
+    spaceTypeId
+    createdById
+    groupId
+    imageId
+    bannerId
+    membersCount
+    createdAt
+    private
+    hidden
+    inviteOnly
+    nonAdminsCanInvite
+    customOrderingIndexInGroup
+    
+    
+    
+      spaceType {
+        
+    id
+    name
+    
+      availablePostTypes {
+        
+    context
+    id
+    name
+    pluralName
+    postTypeTemplateId
+    createdAt
+    primaryReactionType
+    singleChoiceReactions
+    updatedAt
+    mappings {
+      key
+      field
+      type
+      title
+      description
+      required
+      isMainContent
+      isSearchable
+      default
+    }
+    validReplyTypesIds
+    
+      validReplyTypes {
+        
+    context
+    id
+    name
+    pluralName
+    postTypeTemplateId
+    createdAt
+    primaryReactionType
+    singleChoiceReactions
+    updatedAt
+    mappings {
+      key
+      field
+      type
+      title
+      description
+      required
+      isMainContent
+      isSearchable
+      default
+    }
+    validReplyTypesIds
+    
+      validReplyTypes {
+        
+    context
+    id
+    name
+    pluralName
+    postTypeTemplateId
+    createdAt
+    primaryReactionType
+    singleChoiceReactions
+    updatedAt
+    mappings {
+      key
+      field
+      type
+      title
+      description
+      required
+      isMainContent
+      isSearchable
+      default
+    }
+    validReplyTypesIds
+    
+      validReplyTypes {
+        
+    context
+    id
+    name
+    pluralName
+    postTypeTemplateId
+    createdAt
+    primaryReactionType
+    singleChoiceReactions
+    updatedAt
+    mappings {
+      key
+      field
+      type
+      title
+      description
+      required
+      isMainContent
+      isSearchable
+      default
+    }
+    validReplyTypesIds
+    
+  
+      }
+    
+  
+      }
+    
+  
+      }
+    
+  
+      }
+    
+  
+      }
+        
+        
+        
+    
+       
+     
+  
+      }
+    
+    
+      roles {
+        
+    id
+    name
+    type
+    description
+    visible
+    scopes
+  
+      }
+    
+    
+      customCodes(anonymize: false) {
+        
+    anonymize
+    position
+    code
+  
+      }
+    
+    
+  "
+`;

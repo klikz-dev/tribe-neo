@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Discussion",
+    "plural": "Discussions",
+    "slug": "discussion",
+    "fields": [
+      { "name": "Title", "type": "text", "key": "abc" },
+      { "name": "Content", "type": "richtext", "key": "cde" }
+    ]
+  },
+  {
+    "name": "Event",
+    "plural": "Events",
+    "slug": "event",
+    "fields": [
+      { "name": "Title", "type": "text", "key": "abc" },
+      { "name": "Content", "type": "richtext", "key": "cde" },
+      { "name": "Start Date", "type": "date", "key": "def" },
+      { "name": "End Date", "type": "date", "key": "efg" },
+      { "name": "Attendees", "type": "member", "key": "fgh" }
+    ]
+  }
+]

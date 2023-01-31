@@ -1,0 +1,43 @@
+#######################################################
+# Build Variables
+#######################################################
+.env.dev-portal.build:
+  variables:
+    LOCAL_PACKAGE_NAME: dev-portal
+    BUILD_VERSION: $DEV_PORTAL_BUILD_VERSION
+    PUBLIC_PATH: $CDN_DOMAIN/dev-portal/$DEV_PORTAL_BUILD_VERSION/
+    VITE_APP_VERSION: $DEV_PORTAL_BUILD_VERSION
+
+#######################################################
+# Deployment Variables
+# - .common variables are used to publish images to docker repos, which
+#   should not contain values that are specific to each enviornment, but must be
+#   listed for sake of documentation as empty values.
+#######################################################
+.env.dev-portal.common:
+  extends:
+    - .env.dev-portal.build
+  variables:
+    SERVICE_NAME: tribe-dev-portal
+    SERVICE_IMAGE_TAG: $IMAGE_REPO:dev-portal-$REAL_BUILD_VERSION
+    SERVICE_VERSION: $REAL_BUILD_VERSION@$GITLAB_USER_NAME
+    SERVICE_PATH: $CI_PROJECT_DIR/packages/dev-portal
+    DOCKER_FILE: $CI_PROJECT_DIR/packages/dev-portal/stack/docker/Dockerfile
+    SERVICE_MANIFEST: ""
+    TARGET_CLUSTER: ""
+    TARGET_NAMESPACE: ""
+
+.env.dev-portal.dev:
+  environment: dev
+  extends:
+    - .env.dev-portal.common
+
+.env.dev-portal.staging:
+  environment: staging
+  extends:
+    - .env.dev-portal.common
+
+.env.dev-portal.prod:
+  environment: prod
+  extends:
+    - .env.dev-portal.common

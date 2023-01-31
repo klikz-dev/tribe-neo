@@ -1,0 +1,27 @@
+{
+  "slug": "collection",
+  "type": "ENTITY",
+  "address": {
+    "path": "/collection/:id",
+    "exact": false,
+    "editable": false
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Collection"
+  },
+  "slate": {
+    "id": "PAGE::collection",
+    "rootComponents": ["H837bvlsuihfdpoagCOL"],
+    "components": [
+      {
+        "id": "H837bvlsuihfdpoagCOL",
+        "name": "CollectionPage",
+        "acceptsChildren": true,
+        "props": {
+          "id": "$urlParams.id"
+        }
+      }
+    ]
+  }
+}

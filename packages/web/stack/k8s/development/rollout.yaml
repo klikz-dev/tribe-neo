@@ -1,0 +1,81 @@
+---
+# Source: service/templates/rollout.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: tribe-neo
+  labels:
+    app: tribe-neo
+spec:
+  revisionHistoryLimit: 2
+  progressDeadlineSeconds: 720
+  selector:
+    matchLabels:
+      app: tribe-neo
+  strategy:
+    blueGreen:
+      activeService: tribe-neo
+      autoPromotionEnabled: true
+  template:
+    metadata:
+      annotations:
+        ad.datadoghq.com/frontend.logs: >-
+          [{
+            "source": "nodejs",
+            "service": "tribe-neo"
+          }]
+        configHash: master-7f01e05a4e8500ad82fafd7d96f1307d982ae1e6
+      labels:
+        app: tribe-neo
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: neo
+          image: << IMAGE_URI >>
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          readinessProbe:
+            initialDelaySeconds: 5
+            failureThreshold: 12
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+            httpGet:
+              path: /_health
+              port: 5000
+          livenessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+            httpGet:
+              path: /_health
+              port: 5000
+          resources:
+            limits:
+              cpu: "1"
+              ephemeral-storage: 2Gi
+              memory: 1500Mi
+            requests:
+              cpu: "0.5"
+              ephemeral-storage: 1Gi
+              memory: 1000Mi
+          envFrom:
+            - configMapRef:
+                name: tribe-neo-env-settings
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: RELEASE_CHANNEL
+              value: dev
+            - name: DD_VERSION
+              value: << SERVICE_VERSION >>
+            - name: DD_SERVICE_NAME
+              value: tribe-neo
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP

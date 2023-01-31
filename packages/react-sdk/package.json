@@ -1,0 +1,87 @@
+{
+  "name": "@tribeplatform/react-sdk",
+  "version": "2.0.1",
+  "description": "> TODO: description",
+  "author": "Kamran Ghoochanian <kam@tribe.so>",
+  "homepage": "https://gitlab.com/tribeplatform/tribe-neo#readme",
+  "license": "ISC",
+  "main": "dist/cjs/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./components": {
+      "import": "./dist/components/index.js",
+      "require": "./dist/cjs/components/index.js"
+    },
+    "./hooks": {
+      "import": "./dist/hooks/index.js",
+      "require": "./dist/cjs/hooks/index.js"
+    },
+    "./utils": {
+      "import": "./dist/utils/index.js",
+      "require": "./dist/cjs/utils/index.js"
+    },
+    "./lib": {
+      "import": "./dist/lib/index.js",
+      "require": "./dist/cjs/lib/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/index.d.ts"
+      ],
+      "components": [
+        "dist/components/index.d.ts"
+      ],
+      "hooks": [
+        "dist/hooks/index.d.ts"
+      ],
+      "lib": [
+        "dist/lib/index.d.ts"
+      ],
+      "utils": [
+        "dist/utils/index.d.ts"
+      ]
+    }
+  },
+  "engines": {
+    "node": "^16.13.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/tribeplatform/tribe-neo.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "cross-env NODE_ENV=production tsc && tsc -p tsconfig.cjs.json",
+    "build:watch": "tsc --build --watch",
+    "lint": "eslint src --ext .ts,.tsx --config ../../.eslintrc.js",
+    "clean": "tsc --build --clean && rimraf dist"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/tribeplatform/tribe-neo/issues"
+  },
+  "devDependencies": {
+    "faker": "^5.5.3",
+    "tslib": "^2.3.1"
+  },
+  "dependencies": {
+    "@tribeplatform/gql-client": "*",
+    "@tribeplatform/react-ui-kit": "*",
+    "immer": "^9.0.6",
+    "lodash.merge": "^4.6.2",
+    "react-hook-form": "^7.15.1",
+    "react-query": "^3.21.1"
+  },
+  "peerDependencies": {
+    "react": "*"
+  }
+}

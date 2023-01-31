@@ -1,0 +1,27 @@
+{
+  "slug": "member",
+  "type": "ENTITY",
+  "address": {
+    "path": "/member/:id",
+    "exact": false,
+    "editable": false
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Member"
+  },
+  "slate": {
+    "id": "PAGE::member",
+    "rootComponents": ["HBGHiewr8vs72"],
+    "components": [
+      {
+        "id": "HBGHiewr8vs72",
+        "name": "MemberPage",
+        "acceptsChildren": true,
+        "props": {
+          "id": "$urlParams.id"
+        }
+      }
+    ]
+  }
+}

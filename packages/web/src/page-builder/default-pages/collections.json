@@ -1,0 +1,24 @@
+{
+  "slug": "collections",
+  "type": "CUSTOM",
+  "address": {
+    "path": "/collections",
+    "exact": false,
+    "editable": true
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Collections"
+  },
+  "slate": {
+    "id": "PAGE::collections",
+    "rootComponents": ["DFh437vb0sadgazCOL"],
+    "components": [
+      {
+        "id": "DFh437vb0sadgazCOL",
+        "name": "CollectionList",
+        "acceptsAfter": false
+      }
+    ]
+  }
+}

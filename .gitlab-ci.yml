@@ -1,0 +1,298 @@
+include:
+  - local: "stack/ci/cache.yaml"
+  - local: "stack/ci/templates.yaml"
+  - local: "packages/**/stack/ci/environments.yaml"
+  - local: "packages/**/stack/ci/.gitlab-ci.yml"
+
+stages:
+  - pre
+  - build
+  - trigger
+  - publish
+  - deploy:dev
+  - deploy:staging
+  - promote
+  - deploy:prod
+  - deploy:review
+  - stop:review
+  - notify
+
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍ Variables ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+variables:
+  GIT_DEPTH: 1
+  SERVICE: "neo"
+  AWS_REGION: "us-east-1"
+  AWS_IMAGE_REGISTRY: "292539507498.dkr.ecr.us-east-1.amazonaws.com"
+  IMAGE_REPO: tribe-neo-campfire
+  NODE_OPTIONS: "--max-old-space-size=13192"
+  NODE_ENV: production
+  SLACK_BOT_URL: "https://chatops.dev.tribe.so/release/announce"
+  IMAGE_LABELS: >
+    --label org.opencontainers.image.vendor=$CI_SERVER_URL/$GITLAB_USER_LOGIN
+    --label org.opencontainers.image.authors=$CI_SERVER_URL/$GITLAB_USER_LOGIN
+    --label org.opencontainers.image.revision=$CI_COMMIT_SHA
+    --label org.opencontainers.image.source=$CI_PROJECT_URL
+    --label org.opencontainers.image.documentation=$CI_PROJECT_URL
+    --label org.opencontainers.image.licenses=$CI_PROJECT_URL
+    --label org.opencontainers.image.url=$CI_PROJECT_URL
+    --label vcs-url=$CI_PROJECT_URL
+    --label com.gitlab.ci.user=$CI_SERVER_URL/$GITLAB_USER_LOGIN
+    --label com.gitlab.ci.email=$GITLAB_USER_EMAIL
+    --label com.gitlab.ci.tagorbranch=$CI_COMMIT_REF_NAME
+    --label com.gitlab.ci.pipelineurl=$CI_PIPELINE_URL
+    --label com.gitlab.ci.commiturl=$CI_PROJECT_URL/commit/$CI_COMMIT_SHA
+    --label com.gitlab.ci.cijoburl=$CI_JOB_URL
+    --label com.gitlab.ci.mrurl=$CI_PROJECT_URL/-/merge_requests/$CI_MERGE_REQUEST_ID
+
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍ Workflow ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+.defaultBranchWorkflow:
+  if: "$CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH && $CI_COMMIT_TITLE != \"Update CHANGELOG.md unreleased section\" && $CI_COMMIT_TITLE !~ /Merge branch 'release\\//"
+  variables:
+    IS_DEFAULT: "yes"
+
+.tagWorkflow:
+  if: '$CI_COMMIT_TAG && $CI_PIPELINE_SOURCE == "web"'
+  variables:
+    IS_DEFAULT: "yes"
+    IS_TAG: "yes"
+
+.mergeRequestWorkflow:
+  if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH && $CI_COMMIT_REF_NAME !~ /^(hotfix|release)\/(.*)$/'
+  variables:
+    IS_MR: "yes"
+
+.webHotfixWorkflow:
+  if: '$CI_COMMIT_REF_NAME =~ /^hotfix\/web\/([0-9]+\.){2}[0-9]+$/ && $CI_COMMIT_TITLE !~ /^web -\> (.*)$/'
+  variables:
+    IS_HOTFIX: "yes"
+    IS_HOTFIX_WEB: "yes"
+
+.portalHotfixWorkflow:
+  if: '$CI_COMMIT_REF_NAME =~ /^hotfix\/portal\/([0-9]+\.){2}[0-9]+$/ && $CI_COMMIT_TITLE !~ /^portal -\> (.*)$/'
+  variables:
+    IS_HOTFIX: "yes"
+    IS_HOTFIX_PORTAL: "yes"
+
+.devPortalHotfixWorkflow:
+  if: '$CI_COMMIT_REF_NAME =~ /^hotfix\/dev-portal\/([0-9]+\.){2}[0-9]+$/ && $CI_COMMIT_TITLE !~ /^dev-portal -\> (.*)$/'
+  variables:
+    IS_HOTFIX: "yes"
+    IS_HOTFIX_DEV_PORTAL: "yes"
+
+.gqlClientHotfixWorkflow:
+  if: '$CI_COMMIT_REF_NAME =~ /^hotfix\/gql-client\/([0-9]+\.){2}[0-9]+$/ && $CI_COMMIT_TITLE !~ /^gql-client -\> (.*)$/'
+  variables:
+    IS_HOTFIX: "yes"
+    IS_HOTFIX_GQL_CLIENT: "yes"
+
+.reactSdkHotfixWorkflow:
+  if: '$CI_COMMIT_REF_NAME =~ /^hotfix\/react-sdk\/([0-9]+\.){2}[0-9]+$/ && $CI_COMMIT_TITLE !~ /^react-sdk -\> (.*)$/'
+  variables:
+    IS_HOTFIX: "yes"
+    IS_HOTFIX_REACT_SDK: "yes"
+
+.reactUiKitHotfixWorkflow:
+  if: '$CI_COMMIT_REF_NAME =~ /^hotfix\/react-ui-kit\/([0-9]+\.){2}[0-9]+$/ && $CI_COMMIT_TITLE !~ /^react-ui-kit -\> (.*)$/'
+  variables:
+    IS_HOTFIX: "yes"
+    IS_HOTFIX_REACT_UI_KIT: "yes"
+
+.slateKitHotfixWorkflow:
+  if: '$CI_COMMIT_REF_NAME =~ /^hotfix\/slate-kit\/([0-9]+\.){2}[0-9]+$/ && $CI_COMMIT_TITLE !~ /^slate-kit -\> (.*)$/'
+  variables:
+    IS_HOTFIX: "yes"
+    IS_HOTFIX_SLATE_KIT: "yes"
+
+workflow:
+  rules:
+    - !reference [.tagWorkflow]
+    - !reference [.defaultBranchWorkflow]
+    - !reference [.mergeRequestWorkflow]
+    - !reference [.webHotfixWorkflow]
+    - !reference [.portalHotfixWorkflow]
+    - !reference [.devPortalHotfixWorkflow]
+    - !reference [.gqlClientHotfixWorkflow]
+    - !reference [.reactSdkHotfixWorkflow]
+    - !reference [.reactUiKitHotfixWorkflow]
+    - !reference [.slateKitHotfixWorkflow]
+    - when: never
+
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍ Pipeline Stages ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+# ╭─ Pre
+# ├───/cache ─────────────────────────────────────────╮
+prepare:cache:
+  stage: pre
+  extends:
+    - .commonProperty
+  script:
+    - |
+      if [[ -d node_modules ]]; then
+        echo "Cache exists. Skipping..."
+        exit 10
+      fi
+    - yarn install --immutable
+  allow_failure:
+    exit_codes: 10
+# ╰───────────────────────────────────────────────────╯
+# ╭───/env ───────────────────────────────────────────╮
+prepare:env:
+  stage: pre
+  image:
+    name: fsha/release-utils:1.2.0
+    entrypoint:
+      - ""
+  extends:
+    - .commonProperty
+    - .disableCache
+  script:
+    - |
+      while IFS= read -r entry; do
+        package_name=$(echo "$entry" | cut -d ',' -f 1)
+        build_version="$(./scripts/utils/next-package-version.sh "$package_name")-$CI_COMMIT_SHORT_SHA"
+        build_version_env=$(echo "${package_name//[ -]/_}_BUILD_VERSION" | tr '[:lower:]' '[:upper:]')
+        echo "$build_version_env=$build_version" >> build.env
+      done < "packages.list"
+
+      checksum=$(sha256sum yarn.lock stack/docker/Dockerfile.package)
+      package_hash=$(echo $checksum | sha256sum | cut -d ' ' -f 1)
+      image_name=tribe-neo:packages-$package_hash
+      package_image_uri=$CI_REGISTRY_IMAGE/$image_name
+
+      echo "PACKAGE_HASH=$package_hash" >> build.env
+      echo "PACKAGE_IMAGE_NAME=$image_name" >> build.env
+      echo "PACKAGE_IMAGE_URI=$package_image_uri" >> build.env
+
+      echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n $CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD | base64)\"}}}" > /root/.docker/config.json
+      result=$(docker manifest inspect $package_image_uri || true)
+      if [[ $result ]]; then
+        echo "PACKAGE_IMAGE_EXISTS=true" >> build.env
+      fi
+    - cat build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+# ╰───────────────────────────────────────────────────╯
+# ╭───/base-image ────────────────────────────────────╮
+prepare:base-image:
+  stage: pre
+  extends:
+    - .commonProperty
+    - .disableCache
+  needs:
+    - prepare:env
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint:
+      - ""
+  script:
+    - |
+      if [[ $PACKAGE_IMAGE_EXISTS ]]; then
+        echo "Image already exists. Skipping..."
+        exit 0
+      fi
+      echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n $CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD | base64)\"}}}" > /kaniko/.docker/config.json
+      /kaniko/executor --snapshotMode=time --single-snapshot --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/stack/docker/Dockerfile.package --destination $PACKAGE_IMAGE_URI
+# ╰───────────────────────────────────────────────────╯
+# ╭───/packages ──────────────────────────────────────╮
+prepare:packages:
+  stage: pre
+  extends:
+    - .commonProperty
+  needs:
+    - prepare:env
+    - job: prepare:cache
+      optional: true
+  before_script:
+    - |
+      checksums="CHECKSUMS.list"
+      new_checksums="$checksums.temp"
+      touch $checksums
+      touch $new_checksums
+      touch changes.env
+    - |
+      echo "Generating package checksums..."
+      while IFS= read -r entry; do
+        package_path=$(echo "$entry" | cut -d ',' -f 2)
+        package_type=$(echo "$entry" | cut -d ',' -f 3)
+        package_name=${package_path#"packages/"}
+        if [[ "$package_type" == "base" ]]; then
+          echo "$package_name=$(./scripts/package-checksum.sh $package_path)" >> $new_checksums
+        fi
+      done < "packages.list"
+    - |
+      echo "Calculating package changes..."
+      while IFS= read -r new_hash_entry; do
+        package_name=$(echo "$new_hash_entry" | cut -d '=' -f 1)
+        if grep "^$new_hash_entry$" $checksums; then
+          echo "$package_name has not changed."
+        else
+          echo "$package_name has changed."
+          env_name=$(echo "${package_name//[ -]/_}_CHANGED" | tr '[:lower:]' '[:upper:]')
+          export "$env_name=true"
+          echo "$env_name=true" >> changes.env
+        fi
+      done < $new_checksums
+    - mv $new_checksums $checksums
+  script:
+    - |
+      if ./scripts/should-build.sh react-ui-kit; then
+        echo "Building React UI Kit..."
+        yarn react-ui-kit build
+      fi
+    - |
+      if ./scripts/should-build.sh gql-client; then
+        echo "Building GQL Client..."
+        yarn gql-client build
+      fi
+    - |
+      if ./scripts/should-build.sh react-sdk; then
+        echo "Building React SDK..."
+        yarn react-sdk build
+      fi
+    - |
+      if ./scripts/should-build.sh slate-kit; then
+        echo "Building Slate Kit..."
+        yarn slate-kit build
+      fi
+  cache:
+    - !reference [.onlyPullCache, cache]
+    - key: "dependency-cache-$CI_COMMIT_REF_SLUG"
+      paths:
+        - $CI_PROJECT_DIR/packages/**/dist
+      policy: pull-push
+    - key: "dependency-checksums-$CI_COMMIT_REF_SLUG"
+      paths:
+        - CHECKSUMS.list
+      policy: pull-push
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/packages/**/dist
+    reports:
+      dotenv: changes.env
+# ╰───────────────────────────────────────────────────╯
+
+# ╭─ Intermediate Triggers
+# ├───/hotfix ────────────────────────────────────────╮
+# │ This will trigger hotfix deployment to canary env.
+# │ Which product get deployed depends on hotfix branch
+hotfix:
+  stage: trigger
+  extends:
+    - .publishTemplate
+  needs:
+    - job: web:build
+      artifacts: false
+      optional: true
+    - job: dev-portal:build
+      artifacts: false
+      optional: true
+    - job: portal:build
+      artifacts: false
+      optional: true
+  script:
+    - echo "Promoting hotfix to canary environment..."
+  rules:
+    - if: $IS_HOTFIX
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯

@@ -1,0 +1,51 @@
+#######################################################
+# Build Variables
+#######################################################
+.env.web.build:
+  variables:
+    LOCAL_PACKAGE_NAME: web
+    BUILD_VERSION: $WEB_BUILD_VERSION
+    PUBLIC_PATH: $CDN_DOMAIN/neo/$WEB_BUILD_VERSION/
+    RAZZLE_APP_VERSION: $WEB_BUILD_VERSION
+
+#######################################################
+# Deployment Variables
+# - .common variables are used to publish images to docker repos, which
+#   should not contain values that are specific to each enviornment, but must be
+#   listed for sake of documentation as empty values.
+# REAL_BUILD_VERSION is set by build job. It's solution to redundant build jobs
+#######################################################
+.env.web.common:
+  extends:
+    - .env.web.build
+  variables:
+    SERVICE_NAME: tribe-neo
+    SERVICE_IMAGE_TAG: $IMAGE_REPO:web-$REAL_BUILD_VERSION
+    SERVICE_VERSION: $REAL_BUILD_VERSION@$GITLAB_USER_NAME
+    SERVICE_PATH: $CI_PROJECT_DIR/packages/web
+    DOCKER_FILE: $CI_PROJECT_DIR/packages/web/stack/docker/Dockerfile
+    SERVICE_MANIFEST: ""
+    TARGET_CLUSTER: ""
+    TARGET_NAMESPACE: ""
+
+.env.web.dev:
+  environment: dev
+  extends:
+    - .env.web.common
+
+.env.web.staging:
+  environment: staging
+  extends:
+    - .env.web.common
+
+.env.web.prod:
+  environment: prod
+  extends:
+    - .env.web.common
+
+.env.web.review:
+  environment: review/$CI_COMMIT_REF_NAME
+  extends:
+    - .env.web.common
+  variables:
+    REVIEW_APP_NAME: $CI_ENVIRONMENT_SLUG

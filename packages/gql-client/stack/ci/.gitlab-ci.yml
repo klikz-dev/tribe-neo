@@ -1,0 +1,17 @@
+# ╭─ Promote ─────────────────────────────────────────╮
+# │
+gql-client:promote:
+  extends:
+    - .promoteTemplate
+  variables:
+    LOCAL_PACKAGE_NAME: gql-client
+  needs:
+    - job: prepare:packages
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_GQL_CLIENT
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯

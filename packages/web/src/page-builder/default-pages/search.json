@@ -1,0 +1,27 @@
+{
+  "slug": "search",
+  "type": "CUSTOM",
+  "address": {
+    "path": "/search",
+    "exact": false,
+    "editable": true
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Search"
+  },
+  "slate": {
+    "id": "PAGE::search",
+    "rootComponents": ["HDFn78n43flkjsag"],
+    "components": [
+      {
+        "id": "HDFn78n43flkjsag",
+        "name": "Search",
+        "acceptsAfter": false,
+        "props": {
+          "query": "$queryParams.query"
+        }
+      }
+    ]
+  }
+}

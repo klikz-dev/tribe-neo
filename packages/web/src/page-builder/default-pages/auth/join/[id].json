@@ -1,0 +1,26 @@
+{
+  "slug": "join-with-invite",
+  "type": "SYSTEM",
+  "address": {
+    "path": "/auth/join/:id",
+    "exact": true,
+    "editable": false
+  },
+  "layout": "CLASSIC",
+  "seoDetail": {
+    "title": "Join"
+  },
+  "slate": {
+    "id": "PAGE::join-with-invite",
+    "rootComponents": ["DFh437vb0sadgag"],
+    "components": [
+      {
+        "id": "DFh437vb0sadgag",
+        "name": "SignUp",
+        "props": {
+          "invitationLinkId": "$urlParams.id"
+        }
+      }
+    ]
+  }
+}

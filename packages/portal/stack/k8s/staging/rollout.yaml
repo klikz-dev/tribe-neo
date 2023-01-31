@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: tribe-portal
+  labels:
+    app: tribe-portal
+spec:
+  revisionHistoryLimit: 2
+  progressDeadlineSeconds: 720
+  selector:
+    matchLabels:
+      app: tribe-portal
+  strategy:
+    blueGreen:
+      activeService: tribe-portal
+      autoPromotionEnabled: true
+  template:
+    metadata:
+      annotations:
+        ad.datadoghq.com/portal.logs: >-
+          [{
+            "source": "nodejs",
+            "service": "tribe-portal"
+          }]
+        configHash: master-7f01e05a4e8500ad82fafd7d96f1307d982ae1e6
+      labels:
+        app: tribe-portal
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: portal
+          image: << IMAGE_URI >>
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              cpu: "0.5"
+              memory: 500Mi
+              ephemeral-storage: 100Mi
+            limits:
+              cpu: "0.8"
+              memory: 800Mi
+              ephemeral-storage: 200Mi
+          envFrom:
+            - configMapRef:
+                name: tribe-neo-portal-env-settings
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: DD_VERSION
+              value: << SERVICE_VERSION >>
+            - name: DD_SERVICE_NAME
+              value: tribe-portal
+            - name: DD_AGENT_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP

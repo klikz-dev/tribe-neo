@@ -1,0 +1,65 @@
+.ProseMirror {
+  @apply w-full h-full outline-none;
+}
+.ProseMirror ul, .ProseMirror ol {
+  padding: 0 1rem;
+}
+
+/* Selected node state */
+.ProseMirror .ProseMirror-selectednode {
+  @apply outline outline-2;
+}
+
+/* Placeholder */
+.ProseMirror p.is-editor-empty:first-child::before {
+  @apply text-basicSurface-300;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Image */
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mention */
+.ProseMirror .mention {
+  border: 1px solid #000;
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.3rem;
+  box-decoration-break: clone;
+}
+
+/* Code */
+.ProseMirror code {
+  @apply bg-main-50 text-actionPrimary-500;
+  border-radius: 0.25em;
+  box-decoration-break: clone;
+  font-size: 0.9rem;
+  padding: 0.25em;
+}
+
+/* Code Block */
+.ProseMirror pre {
+  @apply bg-main-50 text-basicSurface-700 rounded-sm;
+  font-family: "JetBrainsMono", monospace;
+}
+
+.ProseMirror pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+}
+
+/* List Items */
+
+.ProseMirror ol {
+  @apply list-decimal;
+}
+
+.ProseMirror ul {
+  @apply list-disc;
+}

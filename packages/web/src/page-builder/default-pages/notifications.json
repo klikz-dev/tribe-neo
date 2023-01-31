@@ -1,0 +1,24 @@
+{
+  "slug": "notifications",
+  "type": "CUSTOM",
+  "address": {
+    "path": "/notifications",
+    "exact": false,
+    "editable": true
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Notifications"
+  },
+  "slate": {
+    "id": "PAGE::notifications",
+    "rootComponents": ["Hgpoiu38230007vsjcnd"],
+    "components": [
+      {
+        "id": "Hgpoiu38230007vsjcnd",
+        "name": "NotificationList",
+        "acceptsAfter": false
+      }
+    ]
+  }
+}

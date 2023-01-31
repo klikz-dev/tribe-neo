@@ -1,0 +1,27 @@
+{
+  "slug": "space",
+  "type": "ENTITY",
+  "address": {
+    "path": "/:slug([A-Za-z0-9-]+)",
+    "exact": false,
+    "editable": false
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Space"
+  },
+  "slate": {
+    "id": "PAGE::space",
+    "rootComponents": ["H837bvlsuihfdpoag"],
+    "components": [
+      {
+        "id": "H837bvlsuihfdpoag",
+        "name": "SpacePage",
+        "acceptsChildren": true,
+        "props": {
+          "slug": "$urlParams.slug"
+        }
+      }
+    ]
+  }
+}

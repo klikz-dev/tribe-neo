@@ -1,0 +1,15 @@
+# Create image with all dependecy
+FROM fsha/yarn-3.1:bash AS Installer
+
+RUN mkdir -p /tribe/app
+WORKDIR /tribe/app
+
+ENV PATH /tribe/node_modules/.bin:$PATH
+
+# Copy packages to install packages
+COPY . .
+
+# Install packages
+RUN yarn install --immutable
+
+CMD [ "/bin/sh"]

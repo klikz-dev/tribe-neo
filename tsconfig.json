@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "exclude": ["node_modules"],
+  "references": [
+    { "path": "./packages/web" },
+    { "path": "./packages/react-ui-kit" },
+    { "path": "./packages/react-sdk" },
+    { "path": "./packages/gql-client" },
+    { "path": "./packages/slate-kit" }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "accept",
+  "type": "SYSTEM",
+  "address": {
+    "path": "/auth/accept",
+    "exact": true,
+    "editable": false
+  },
+  "layout": "CLASSIC",
+  "seoDetail": {
+    "title": "Accept Invitation"
+  },
+  "slate": {
+    "id": "PAGE::accept",
+    "rootComponents": ["DFh437vb0sadgag"],
+    "components": [
+      {
+        "id": "DFh437vb0sadgag",
+        "name": "SignUp"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root,
+#headlessui-portal-root {
+  isolation: isolate;
+}
+
+*,
+::before,
+::after {
+  --tw-ring-color: var(--tribe-color-actionAccent-300);
+  --tw-ring-offset-width: 2px;
+
+  outline-color: var(--tw-ring-color);
+  outline-offset: var(--tw-ring-offset-width);
+}
+

@@ -1,0 +1,9 @@
+GITLAB_API_TOKEN=
+CI_API_V4_URL=https://gitlab.com/api/v4
+CI_PROJECT_ID=29216925
+CI_PROJECT_URL=https://gitlab.com/tribeplatform/tribe-neo
+CI_DEFAULT_BRANCH=master
+APP_CANARY_HEADER=X-Tribe-UI-Canary
+WEB_VERSION_ENDPOINT=https://tribe-neo.tribeplatform.com/.well-known/version
+PORTAL_VERSION_ENDPOINT=https://login.tribe.so/.well-known/version
+DEV_PORTAL_VERSION_ENDPOINT=https://partners.tribe.so/.well-known/version

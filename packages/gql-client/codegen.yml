@@ -1,0 +1,15 @@
+overwrite: true
+schema: 'https://app.dev.tribe.so/api/gateway'
+#schema: 'http://localhost:5000/graphql'
+generates:
+  src/types/tribe-graphql.generated.ts:
+    plugins:
+      - typescript
+      - fragment-matcher
+    config:
+      skipTypename: true
+      preResolveTypes: true
+      scalars:
+        DateTime: string
+      namingConvention:
+        enumValues: constant-case#constantCase

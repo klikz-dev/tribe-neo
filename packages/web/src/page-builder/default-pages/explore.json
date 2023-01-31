@@ -1,0 +1,78 @@
+{
+  "slug": "explore",
+  "type": "CUSTOM",
+  "address": {
+    "path": "/explore",
+    "exact": false,
+    "editable": true
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Explore"
+  },
+  "slate": {
+    "id": "PAGE::explore",
+    "rootComponents": [
+      "huhg38790gsfghpb",
+      "huhg38790gsfghpe",
+      "huhg38790gsfghpc",
+      "huhg38790gsfghpd"
+    ],
+    "components": [
+      {
+        "id": "huhg38790gsfghpb",
+        "name": "Announcement",
+        "props": {
+          "title": "Welcome to your community",
+          "description": "This is a test announcement block",
+          "actionText": "Create new Tribe",
+          "actionUrl": "https://tribe.so/create"
+        }
+      },
+      {
+        "id": "huhg38790gsfghpe",
+        "name": "RichText",
+        "props": {
+          "content": "<h2>Rich Text Block</h2><p>Custom content goes here.</p>"
+        }
+      },
+      {
+        "id": "huhg38790gsfghpc",
+        "name": "Iframe",
+        "props": {
+          "src": "https://tribe.so/create",
+          "height": 900
+        }
+      },
+      {
+        "id": "huhg38790gsfghpd",
+        "name": "QuickLinks",
+        "props": {
+          "columns": 4,
+          "links": [
+            {
+              "title": "Get Help",
+              "description": "Find answers to your questions. Ask the Community for help or hire someone to help you.",
+              "url": "/spaces"
+            },
+            {
+              "title": "Learn and Share",
+              "description": "Find and share Zapier tips and tricks, and learn how other people are using Zapier.",
+              "url": "/spaces"
+            },
+            {
+              "title": "See What's New",
+              "description": "Check out the latest Zapier announcements and Community-related updates.",
+              "url": "/spaces"
+            },
+            {
+              "title": "For Developers",
+              "description": "Have technical discussions about building app integrations on the Zapier platform.",
+              "url": "/spaces"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

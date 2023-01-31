@@ -1,0 +1,23 @@
+{
+  "slug": "verify",
+  "type": "SYSTEM",
+  "address": {
+    "path": "/auth/verify",
+    "exact": true,
+    "editable": false
+  },
+  "layout": "CLASSIC",
+  "seoDetail": {
+    "title": "Verify Email"
+  },
+  "slate": {
+    "id": "PAGE::verify",
+    "rootComponents": ["DFh437vb0sadgag"],
+    "components": [
+      {
+        "id": "DFh437vb0sadgag",
+        "name": "Verify"
+      }
+    ]
+  }
+}

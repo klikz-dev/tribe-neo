@@ -1,0 +1,24 @@
+{
+  "slug": "spaces",
+  "type": "CUSTOM",
+  "address": {
+    "path": "/spaces",
+    "exact": false,
+    "editable": true
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Spaces"
+  },
+  "slate": {
+    "id": "PAGE::spaces",
+    "rootComponents": ["DFh437vb0sadgaz"],
+    "components": [
+      {
+        "id": "DFh437vb0sadgaz",
+        "name": "SpaceList",
+        "acceptsAfter": false
+      }
+    ]
+  }
+}

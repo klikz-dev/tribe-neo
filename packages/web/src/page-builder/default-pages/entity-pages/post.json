@@ -1,0 +1,27 @@
+{
+  "slug": "post",
+  "type": "ENTITY",
+  "address": {
+    "path": "/:slug([A-Za-z0-9-]+)/post/:address",
+    "exact": false,
+    "editable": false
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Post"
+  },
+  "slate": {
+    "id": "PAGE::post",
+    "rootComponents": ["NBu93g0bhpsnags"],
+    "components": [
+      {
+        "id": "NBu93g0bhpsnags",
+        "name": "PostPage",
+        "acceptsChildren": true,
+        "props": {
+          "address": "$urlParams.address"
+        }
+      }
+    ]
+  }
+}

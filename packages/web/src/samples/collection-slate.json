@@ -1,0 +1,20 @@
+{
+  "id": "SLHVnfduvos835",
+  "rootComponents": ["dsafdfdfgssgf", "jhslfuhlub4lv2COL"],
+  "components": [
+    {
+      "id": "dsafdfdfgssgf",
+      "name": "CollectionHeader",
+      "props": {
+        "collection": "$collection"
+      }
+    },
+    {
+      "id": "jhslfuhlub4lv2COL",
+      "name": "SpaceList",
+      "props": {
+        "collectionId": "$collection.id"
+      }
+    }
+  ]
+}

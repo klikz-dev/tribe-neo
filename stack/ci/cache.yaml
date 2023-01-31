@@ -1,0 +1,20 @@
+#######################################################
+# Global Cache configuration for the repository, this configuration will be
+# used by default by all jobs
+#######################################################
+cache: &global_cache
+  key:
+    files:
+      - yarn.lock
+  paths:
+    - node_modules/
+    - "**/node_modules/"
+  policy: pull-push
+
+.disableCache:
+  cache: {}
+
+.onlyPullCache:
+  cache:
+    <<: *global_cache
+    policy: pull

@@ -1,0 +1,209 @@
+# ╭─[local templates] ────────────────────────────────╮
+# │
+.deployDevPortalTemplate:
+  extends:
+    - .deployTemplate
+  before_script:
+    - |
+      if [[ $FREEZE_DEV_PORTAL_DEPLOYMENTS ]]; then
+        if [[ ! $CI_JOB_MANUAL ]]; then
+          export FREEZED=true
+        fi
+      fi
+  needs: &deploy-needs
+    - prepare:env
+    - dev-portal:build
+    - job: dev-portal:publish:assets
+      artifacts: false
+    - job: dev-portal:publish:image
+      artifacts: false
+# ├───────────────────────────────────────────────────
+.notifyDevPortalTemplate:
+  extends:
+    - .notifyTemplate
+  variables:
+    PRODUCT_NAME: Dev Portal
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_DEV_PORTAL
+# │
+# ╰───────────────────────────────────────────────────╯
+
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍ Pipeline Stages ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+# ╭─ Build ───────────────────────────────────────────╮
+# │
+dev-portal:build:
+  extends:
+    - .buildTemplate
+    - .env.dev-portal.build
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_DEV_PORTAL
+    - if: $IS_MR
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Publish ─────────────────────────────────────────╮
+# ├───/assets ────────────────────────────────────────
+# │
+dev-portal:publish:assets:
+  extends:
+    - .publishAssetsTemplate
+  variables:
+    LOCAL_BUILD_PATH: packages/dev-portal/build/client/assets
+    REMOTE_BUILD_PATH: dev-portal/$REAL_BUILD_VERSION/assets
+  needs:
+    - prepare:env
+    - dev-portal:build
+    - job: hotfix
+      optional: true
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_DEV_PORTAL
+# │
+# ├───/image ─────────────────────────────────────────
+# │
+dev-portal:publish:image:
+  extends:
+    - .publishImageTemplate
+    - .env.dev-portal.common
+  needs:
+    - prepare:env
+    - dev-portal:build
+    - job: hotfix
+      optional: true
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_DEV_PORTAL
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ K8s Deployments ─────────────────────────────────╮
+# ├───/dev ───────────────────────────────────────────
+# │
+dev-portal:deploy:dev:
+  stage: deploy:dev
+  extends:
+    - .deployDevPortalTemplate
+    - .env.dev-portal.dev
+  rules:
+    - if: $IS_DEFAULT && $FREEZE_DEV_PORTAL_DEPLOYMENTS
+      when: manual
+    - if: $IS_DEFAULT
+# │
+# ├───/staging ───────────────────────────────────────
+# │
+dev-portal:deploy:staging:
+  stage: deploy:staging
+  extends:
+    - .deployDevPortalTemplate
+    - .env.dev-portal.staging
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_DEV_PORTAL
+      when: manual # TODO: Delegate to canary when available
+# │
+# ├───/promote ────────────────────────────────────────
+# │
+dev-portal:promote:
+  extends:
+    - .promoteTemplate
+  variables:
+    LOCAL_PACKAGE_NAME: dev-portal
+  needs:
+    - job: dev-portal:publish:assets
+      artifacts: false
+    - job: dev-portal:publish:image
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_DEV_PORTAL
+      when: manual
+# │
+# ├───/production ────────────────────────────────────
+# │
+dev-portal:deploy:prod:
+  stage: deploy:prod
+  extends:
+    - .deployDevPortalTemplate
+    - .env.dev-portal.prod
+  needs:
+    - *deploy-needs
+    - job: dev-portal:promote
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_DEV_PORTAL
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Release Notifications ───────────────────────────╮
+# ├───/dev ───────────────────────────────────────────
+# │
+dev-portal:notify:dev:
+  extends:
+    - .notifyDevPortalTemplate
+  needs:
+    - prepare:env
+    - dev-portal:build
+    - dev-portal:deploy:dev
+  variables:
+    CURRENT_ENV: Dev
+    CURRENT_JOB: dev-portal:deploy:dev
+    NEXT_ENV: Staging
+    NEXT_JOB: dev-portal:deploy:staging
+    SKIP_NOTIFY: $DEV_PORTAL_BUILD_REUSED
+  rules:
+    - if: $IS_DEFAULT
+# │
+# ├───/staging ───────────────────────────────────────
+# │
+dev-portal:notify:staging:
+  extends:
+    - .notifyDevPortalTemplate
+  needs:
+    - prepare:env
+    - dev-portal:deploy:staging
+  variables:
+    CURRENT_ENV: Staging
+    CURRENT_JOB: dev-portal:deploy:staging
+    NEXT_ENV: Beta
+    NEXT_JOB: dev-portal:promote
+# │
+# ├───/beta ──────────────────────────────────────────
+# │
+dev-portal:notify:beta:
+  extends:
+    - .notifyDevPortalTemplate
+  needs:
+    - prepare:env
+    - dev-portal:promote
+  variables:
+    CURRENT_ENV: Beta
+    CURRENT_JOB: ""
+    NEXT_ENV: Prod
+    NEXT_JOB: dev-portal:deploy:prod
+# │
+# ├───/production ────────────────────────────────────
+# │
+dev-portal:notify:prod:
+  extends:
+    - .notifyDevPortalTemplate
+  needs:
+    - prepare:env
+    - dev-portal:deploy:prod
+  variables:
+    CURRENT_ENV: Prod
+    CURRENT_JOB: dev-portal:deploy:prod
+    NEXT_ENV: ""
+    NEXT_JOB: ""
+# │
+# ╰───────────────────────────────────────────────────╯
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍

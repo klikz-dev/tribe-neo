@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+::before,
+::after {
+  --tw-ring-color: var(--tribe-color-actionAccent-300);
+  --tw-ring-offset-width: 2px;
+
+  outline-color: var(--tw-ring-color);
+  outline-offset: 0;
+}

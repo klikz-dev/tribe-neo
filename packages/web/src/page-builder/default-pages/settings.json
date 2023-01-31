@@ -1,0 +1,27 @@
+{
+  "slug": "settings-profile",
+  "type": "CUSTOM",
+  "address": {
+    "path": "/settings",
+    "exact": false,
+    "editable": true
+  },
+  "layout": "CLASSIC",
+  "seoDetail": {
+    "title": "Settings"
+  },
+  "slate": {
+    "id": "PAGE::settings-profile",
+    "rootComponents": ["HBGHiewr8vs73"],
+    "components": [
+      {
+        "id": "HBGHiewr8vs73",
+        "name": "Settings",
+        "acceptsChildren": true,
+        "props": {
+          "id": "$urlParams.id"
+        }
+      }
+    ]
+  }
+}

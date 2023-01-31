@@ -1,0 +1,109 @@
+{
+  "name": "@tribeplatform/react-ui-kit",
+  "version": "2.0.1",
+  "description": "> TODO: description",
+  "author": "Kamran Ghoochanian <kam@tribe.so>",
+  "homepage": "https://gitlab.com/tribeplatform/tribe-neo#readme",
+  "license": "ISC",
+  "main": "index.js",
+  "engines": {
+    "node": "^16.13.0"
+  },
+  "exports": {
+    "./stories/*": {
+      "import": "./dist/*",
+      "require": "./dist/cjs/*"
+    },
+    "./*": {
+      "import": "./dist/*/index.js",
+      "require": "./dist/cjs/*/index.js"
+    },
+    "./components.min.css": "./dist/components.min.css",
+    "./icons": {
+      "import": "./dist/icons.js",
+      "require": "./dist/cjs/icons.js"
+    }
+  },
+  "directories": {},
+  "files": [],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/tribeplatform/tribe-neo.git"
+  },
+  "scripts": {
+    "test": "jest",
+    "storybook": "start-storybook -p 6006",
+    "dev": "yarn storybook",
+    "build-storybook": "build-storybook",
+    "clean": "tsc --build --clean && rimraf dist",
+    "build": "cross-env-shell NODE_ENV=production \"yarn build:src && yarn build:cjs && yarn build:css --minify\"",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:src": "tsc --build",
+    "build:css": "npx tailwindcss -i ./src/styles.css -o ./dist/components.min.css",
+    "build:watch": "run-p \"build:src --watch\" \"build:css --watch\"",
+    "lint": "eslint src --ext .ts,.tsx --config ../../.eslintrc.js",
+    "size": "yarn build && size-limit"
+  },
+  "bugs": {
+    "url": "https://gitlab.com/tribeplatform/tribe-neo/issues"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^6.3.0",
+    "@storybook/addon-links": "^6.3.0",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/builder-webpack5": "^6.3.12",
+    "@storybook/manager-webpack5": "^6.3.12",
+    "@storybook/react": "^6.3.0",
+    "@tailwindcss/forms": "^0.4.0",
+    "@welldone-software/why-did-you-render": "^6.2.1",
+    "autoprefixer": "^10.4.0",
+    "babel-loader": "^8.2.3",
+    "cssnano": "^5.0.11",
+    "downshift": "^6.1.7",
+    "postcss": "^8.4.4",
+    "tailwindcss": "^3.0.1",
+    "tslib": "^2.3.1"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.4.1",
+    "@heroicons/react": "^1.0.5",
+    "@popperjs/core": "^2.10.1",
+    "clsx": "^1.1.1",
+    "react-confirm": "^0.1.24",
+    "react-hot-toast": "^2.1.1",
+    "react-popper": "^2.2.5",
+    "react-range": "^1.8.11",
+    "tailwind-merge": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@babel/core": "*",
+    "autoprefixer": "*",
+    "postcss": "*",
+    "react": "*",
+    "react-dom": "*",
+    "webpack": "*"
+  },
+  "peerDependenciesMeta": {
+    "@babel/core": {
+      "optional": true
+    },
+    "autoprefixer": {
+      "optional": true
+    },
+    "postcss": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    }
+  }
+}

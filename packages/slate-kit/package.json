@@ -1,0 +1,125 @@
+{
+  "name": "@tribeplatform/slate-kit",
+  "version": "0.4.1",
+  "description": "This package is responsible for rendering/creating/editing/validating slates alongside import/export them",
+  "keywords": [
+    "slate",
+    "kit",
+    "slatekit",
+    "slate-kit",
+    "tribe",
+    "tools"
+  ],
+  "author": "Tribeplatform",
+  "homepage": "https://developers.tribeplatform.com",
+  "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "src": "src",
+    "dist": "dist"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./components": {
+      "import": "./dist/components/index.js",
+      "require": "./dist/cjs/components/index.js"
+    },
+    "./dtos": {
+      "import": "./dist/dtos/index.js",
+      "require": "./dist/cjs/dtos/index.js"
+    },
+    "./enums": {
+      "import": "./dist/enums/index.js",
+      "require": "./dist/cjs/enums/index.js"
+    },
+    "./types": {
+      "import": "./dist/types/index.js",
+      "require": "./dist/cjs/types/index.js"
+    },
+    "./hooks": {
+      "import": "./dist/hooks/index.js",
+      "require": "./dist/cjs/hooks/index.js"
+    },
+    "./utils": {
+      "import": "./dist/utils/index.js",
+      "require": "./dist/cjs/utils/index.js"
+    },
+    "./convertors": {
+      "import": "./dist/convertors/index.js",
+      "require": "./dist/cjs/convertors/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      ".": [
+        "dist/index.d.ts"
+      ],
+      "components": [
+        "dist/components/index.d.ts"
+      ],
+      "dtos": [
+        "dist/dtos/index.d.ts"
+      ],
+      "enums": [
+        "dist/enums/index.d.ts"
+      ],
+      "types": [
+        "dist/types/index.d.ts"
+      ],
+      "hooks": [
+        "dist/hooks/index.d.ts"
+      ],
+      "utils": [
+        "dist/utils/index.d.ts"
+      ],
+      "convertors": [
+        "dist/convertors/index.d.ts"
+      ]
+    }
+  },
+  "engines": {
+    "node": "^16.13.0"
+  },
+  "scripts": {
+    "lint": "eslint src --ext .ts,.tsx --config ../../.eslintrc.js",
+    "build": "cross-env NODE_ENV=production tsc && tsc -p tsconfig.cjs.json",
+    "build:watch": "tsc --build --watch",
+    "test": "jest",
+    "clean": "tsc --build --clean && rimraf dist",
+    "prepublishOnly": "yarn && yarn build"
+  },
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.1",
+    "liquidjs": "^9.25.1",
+    "node-html-parser": "^4.1.5",
+    "reflect-metadata": "^0.1.13",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@tribeplatform/eslint-plugin": "^1.0.2"
+  },
+  "peerDependencies": {
+    "eslint": "*",
+    "react": "*",
+    "react-dom": "*",
+    "react-router-dom": "*",
+    "typescript": "*"
+  },
+  "peerDependenciesMeta": {
+    "eslint": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    }
+  }
+}

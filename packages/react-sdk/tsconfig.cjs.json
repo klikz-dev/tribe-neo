@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "dist/cjs",
+    "declarationMap": false
+  },
+
+  // Currently, the only top-level property that is excluded from inheritance is references.
+  // https://www.typescriptlang.org/tsconfig#extends
+  "references": [{ "path": "../react-ui-kit/" }, { "path": "../gql-client" }]
+}

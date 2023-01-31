@@ -1,0 +1,17 @@
+# ╭─ Promote ─────────────────────────────────────────╮
+# │
+slate-kit:promote:
+  extends:
+    - .promoteTemplate
+  variables:
+    LOCAL_PACKAGE_NAME: slate-kit
+  needs:
+    - job: prepare:packages
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_SLATE_KIT
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯

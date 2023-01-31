@@ -1,0 +1,91 @@
+{
+  "id": "SLHVnfduvos835",
+  "rootComponents": ["jhslfuhlub4la"],
+  "components": [
+    {
+      "id": "jhslfuhlub4la",
+      "name": "SpaceHeader",
+      "acceptsChildren": true,
+      "props": {
+        "title": "$space.name",
+        "banner": "$space.banner",
+        "image": "$space.image",
+        "name": "simple",
+        "tabs": [
+          {
+            "name": "Latest",
+            "path": "/"
+          },
+          {
+            "name": "Top Ideas",
+            "path": "/ideas"
+          },
+          {
+            "name": "Top Feature Requests",
+            "path": "/features"
+          }
+        ]
+      },
+      "children": [["HBfb7349vsgvjalsg"], ["HBfb7sdg49vsgvjalss"]]
+    },
+    {
+      "id": "HBfb7349vsgvjalsg",
+      "name": "Columns",
+      "acceptsChildren": true,
+      "props": {
+        "columns": [
+          {
+            "main": true
+          },
+          {
+            "sticky": true
+          }
+        ]
+      },
+      "children": [["DFh8347v-bsdfq", "huhg38790gsfghpa"], []]
+    },
+    {
+      "id": "huhg38790gsfghpa",
+      "name": "PostList",
+      "acceptsAfter": false,
+      "props": {
+        "spaceId": "$space.id"
+      }
+    },
+    {
+      "id": "DFh8347v-bsdfq",
+      "name": "Composer",
+      "props": {
+        "spaceId": "$space.id",
+        "buttons": [
+          {
+            "text": "Suggest an Idea",
+            "icon": "LightBulb",
+            "color": "warning-300"
+          },
+          {
+            "text": "Request a Feature",
+            "icon": "EmojiHappy",
+            "color": "success-500"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HBfb7sdg49vsgvjalss",
+      "name": "div",
+      "props": {
+        "className": "mt-10"
+      },
+      "children": ["DSFHgo723fb"]
+    },
+    {
+      "id": "DSFHgo723fb",
+      "name": "MemberList",
+      "acceptsAfter": false,
+      "props": {
+        "spaceId": "$space.id"
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "name": "@tribeplatform/dev-portal",
+  "version": "0.2.1",
+  "description": "",
+  "keywords": [],
+  "author": "Tribeplatform",
+  "homepage": "https://developers.tribeplatform.com",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": "^16.13.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/tribeplatform/tribe-neo.git"
+  },
+  "scripts": {
+    "clean": "tsc --build --clean && rimraf dist",
+    "dev": "vite",
+    "serve": "vite preview",
+    "build": "tsc && vite build --outDir dist/client && make",
+    "serve:prod": "NODE_ENV=production node build/server.mjs",
+    "test": "jest",
+    "test:watch": "yarn test --watch",
+    "test:ci": "yarn test --coverage --ci --forceExit",
+    "lint": "eslint . --ext .ts,.tsx --config ../../.eslintrc.js"
+  },
+  "dependencies": {
+    "@heroicons/react": "^1.0.4",
+    "@loadable/component": "^5.15.0",
+    "@loadable/server": "^5.15.1",
+    "@monaco-editor/react": "^4.3.1",
+    "@tribeplatform/gql-client": "*",
+    "@tribeplatform/react-sdk": "*",
+    "@tribeplatform/react-ui-kit": "*",
+    "ejs": "^3.1.6",
+    "jwt-decode": "^3.1.1",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.merge": "^4.6.2",
+    "react-fast-compare": "^3.2.0",
+    "react-hook-form": "^7.15.1",
+    "remixicon-react": "^1.0.0",
+    "slate": "^0.71.0",
+    "slate-hyperscript": "^0.67.0",
+    "slate-react": "^0.71.0",
+    "use-clipboard-copy": "^0.2.0",
+    "wouter": "^2.7.4"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@loadable/babel-plugin": "^5.13.2",
+    "@tailwindcss/forms": "^0.4.0",
+    "@types/loadable__component": "^5.13.4",
+    "@types/loadable__server": "^5.12.6",
+    "@types/quill": "^2.0.9",
+    "autoprefixer": "^10.4.0",
+    "cssnano": "^5.0.11",
+    "monaco-editor": "^0.31.0",
+    "msw": "^0.36.0",
+    "postcss": "^8.4.4",
+    "tailwindcss": "^3.0.1"
+  },
+  "peerDependencies": {
+    "@babel/core": "*",
+    "@vitejs/plugin-react-refresh": "*",
+    "autoprefixer": "*",
+    "postcss": "*",
+    "react": "*",
+    "react-dom": "*",
+    "vite": "*",
+    "vite-tsconfig-paths": "*"
+  }
+}

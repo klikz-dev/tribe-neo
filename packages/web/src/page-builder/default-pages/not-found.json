@@ -1,0 +1,24 @@
+{
+  "slug": "not-found",
+  "type": "SYSTEM",
+  "address": {
+    "path": "/404",
+    "exact": false,
+    "editable": true
+  },
+  "layout": "CLASSIC",
+  "seoDetail": {
+    "title": "Not Found"
+  },
+  "slate": {
+    "id": "PAGE::not-found",
+    "rootComponents": ["Hgpoiu38230007vsjcna"],
+    "components": [
+      {
+        "id": "Hgpoiu38230007vsjcna",
+        "name": "NotFound",
+        "acceptsAfter": false
+      }
+    ]
+  }
+}

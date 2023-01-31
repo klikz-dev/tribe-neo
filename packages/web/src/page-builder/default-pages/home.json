@@ -1,0 +1,89 @@
+{
+  "slug": "home",
+  "type": "SYSTEM",
+  "address": {
+    "path": "/",
+    "exact": true,
+    "editable": false
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Home"
+  },
+  "slate": {
+    "id": "PAGE::home",
+    "rootComponents": ["HBfb7349vsgvjalsg"],
+    "components": [
+      {
+        "id": "HBfb7349vsgvjalsg",
+        "name": "Columns",
+        "acceptsChildren": true,
+        "props": {
+          "columns": [
+            {
+              "main": true
+            },
+            {
+              "sticky": true
+            }
+          ]
+        },
+        "children": [
+          [
+            "DFh437vb0sadgax",
+            "huhg38790gsfghaa",
+            "huhg38790gsfghpe",
+            "huhg38790gsfghpa"
+          ],
+          ["by42362ljsdfgk", "huhg38790gsfghpc"]
+        ]
+      },
+      {
+        "id": "by42362ljsdfgk",
+        "name": "Leaderboard"
+      },
+      {
+        "id": "DFh437vb0sadgax",
+        "name": "Shaman",
+        "acceptsAfter": true
+      },
+      {
+        "id": "huhg38790gsfghaa",
+        "name": "Announcement",
+        "props": {
+          "title": "Welcome to your community",
+          "description": "This is a test announcement block",
+          "actionText": "Create new Tribe",
+          "actionUrl": "https://tribe.so/create",
+          "hidden": true
+        },
+        "acceptsAfter": true
+      },
+      {
+        "id": "huhg38790gsfghpa",
+        "name": "Feed",
+        "acceptsAfter": false,
+        "props": {
+          "view": "card"
+        }
+      },
+      {
+        "id": "huhg38790gsfghpe",
+        "name": "RichText",
+        "props": {
+          "hidden": true,
+          "content": "<h2>Rich Text Block</h2><p>Custom content goes here.</p>"
+        }
+      },
+      {
+        "id": "huhg38790gsfghpc",
+        "name": "Iframe",
+        "props": {
+          "src": "https://tribe.so/create",
+          "height": 900,
+          "hidden": true
+        }
+      }
+    ]
+  }
+}

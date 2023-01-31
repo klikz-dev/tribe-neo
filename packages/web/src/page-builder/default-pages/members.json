@@ -1,0 +1,24 @@
+{
+  "slug": "members",
+  "type": "CUSTOM",
+  "address": {
+    "path": "/members",
+    "exact": false,
+    "editable": true
+  },
+  "layout": "DEFAULT",
+  "seoDetail": {
+    "title": "Members"
+  },
+  "slate": {
+    "id": "PAGE::members",
+    "rootComponents": ["Hgpoiu38230007vsjcnv"],
+    "components": [
+      {
+        "id": "Hgpoiu38230007vsjcnv",
+        "name": "MemberList",
+        "acceptsAfter": false
+      }
+    ]
+  }
+}

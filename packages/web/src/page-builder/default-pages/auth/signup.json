@@ -1,0 +1,23 @@
+{
+  "slug": "signup",
+  "type": "SYSTEM",
+  "address": {
+    "path": "/auth/signup",
+    "exact": true,
+    "editable": true
+  },
+  "layout": "CLASSIC",
+  "seoDetail": {
+    "title": "Sign up"
+  },
+  "slate": {
+    "id": "PAGE::signup",
+    "rootComponents": ["DFh437vb0sadgag"],
+    "components": [
+      {
+        "id": "DFh437vb0sadgag",
+        "name": "SignUp"
+      }
+    ]
+  }
+}

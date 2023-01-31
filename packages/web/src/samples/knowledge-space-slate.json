@@ -1,0 +1,99 @@
+{
+  "id": "SLHVnfduvos835",
+  "rootComponents": ["jhslfuhlub4la"],
+  "components": [
+    {
+      "id": "jhslfuhlub4la",
+      "name": "SpaceHeader",
+      "acceptsChildren": true,
+      "props": {
+        "title": "$space.name",
+        "banner": "$space.banner",
+        "image": "$space.image",
+        "name": "simple",
+        "tabs": [
+          {
+            "name": "Articles",
+            "path": "/"
+          },
+          {
+            "name": "Questions",
+            "path": "/questions"
+          }
+        ]
+      },
+      "children": [["HBfb7349vsgvjalsg"], ["HBfb7sdg49vsgvjalss"]]
+    },
+    {
+      "id": "HBfb7349vsgvjalsg",
+      "name": "Columns",
+      "acceptsChildren": true,
+      "props": {
+        "columns": [
+          {
+            "main": true
+          },
+          {
+            "sticky": true
+          }
+        ]
+      },
+      "children": [["DFh8347v-bsdfq", "huhg38790gsfghpa"], ["by42362ljsdfgc"]]
+    },
+    {
+      "id": "huhg38790gsfghpa",
+      "name": "PostList",
+      "acceptsAfter": false,
+      "props": {
+        "spaceId": "$space.id",
+        "defaultView": "row",
+        "tagId": "$blocksOutput.by42362ljsdfgc.tagId"
+      }
+    },
+    {
+      "id": "DFh8347v-bsdfq",
+      "name": "Composer",
+      "props": {
+        "spaceId": "$space.id",
+        "infoText": "Only admins have access to this composer",
+        "buttons": [
+          {
+            "text": "Write an Article",
+            "icon": "LightBulb",
+            "color": "warning-300"
+          },
+          {
+            "text": "Create a Category",
+            "icon": "EmojiHappy",
+            "color": "success-500"
+          }
+        ]
+      }
+    },
+    {
+      "id": "HBfb7sdg49vsgvjalss",
+      "name": "div",
+      "props": {
+        "className": "mt-10"
+      },
+      "children": ["DSFHgo723fb"]
+    },
+    {
+      "id": "DSFHgo723fb",
+      "name": "MemberList",
+      "acceptsAfter": false,
+      "props": {
+        "spaceId": "$space.id"
+      }
+    },
+    {
+      "id": "by42362ljsdfgc",
+      "name": "TagsBlock",
+      "props": {
+        "spaceId": "$space.id",
+        "title": "Categories"
+      },
+      "output": "{\"tagId\": null}"
+    }
+  ]
+}

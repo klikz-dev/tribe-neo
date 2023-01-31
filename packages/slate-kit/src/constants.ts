@@ -1,0 +1,3 @@
+export const RAW_TEXT_COMPONENT = 'RawText'
+
+export const RESERVED_COMPONENT_NAMES = [RAW_TEXT_COMPONENT]

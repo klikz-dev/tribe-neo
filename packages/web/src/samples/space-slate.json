@@ -1,0 +1,109 @@
+{
+  "id": "SLHVnfduvos835",
+  "rootComponents": ["jhslfuhlub4lv", "jhslfuhlub4lv2"],
+  "components": [
+    {
+      "id": "jhslfuhlub4lv",
+      "name": "SpaceHeader",
+      "props": {
+        "space": "$space"
+      }
+    },
+    {
+      "id": "jhslfuhlub4lv2",
+      "name": "Tabs",
+      "acceptsChildren": true,
+      "props": {
+        "rounded": "desktop",
+        "fullWidth": true,
+        "attached": "top",
+        "tabs": [
+          {
+            "name": "Feed",
+            "path": "/"
+          },
+          {
+            "name": "Members",
+            "path": "/members"
+          }
+        ]
+      },
+      "children": [["HBfb7349vsgvjalsg"], ["HBfb7sdg49vsgvjalss"]]
+    },
+    {
+      "id": "HBfb7349vsgvjalsg",
+      "name": "Columns",
+      "acceptsChildren": true,
+      "props": {
+        "columns": [
+          {
+            "main": true
+          },
+          {
+            "sticky": true
+          }
+        ]
+      },
+      "children": [
+        ["DFh8347v-bsdfq", "huhg38790gsfghpa"],
+        ["BY7qEbFXsBu6lW", "DSFh4820fSdfh", "BY7qEbFXsBu6gp"]
+      ]
+    },
+    {
+      "id": "huhg38790gsfghpa",
+      "name": "PostList",
+      "acceptsAfter": false,
+      "props": {
+        "spaceId": "$space.id",
+        "tagId": "$queryParams.tag_id"
+      }
+    },
+    {
+      "id": "DFh8347v-bsdfq",
+      "name": "PostComposer",
+      "props": {
+        "space": "$space"
+      }
+    },
+    {
+      "id": "DSFh4820fSdfh",
+      "name": "Iframe",
+      "props": {
+        "src": "",
+        "height": 200,
+        "hidden": true
+      }
+    },
+    {
+      "id": "BY7qEbFXsBu6lW",
+      "name": "SpaceAbout",
+      "props": {
+        "space": "$space"
+      }
+    },    
+    {
+      "id": "BY7qEbFXsBu6gp",
+      "name": "HighlightedTags",
+      "props": {
+        "space": "$space",
+        "activeTagId": "$queryParams.tag_id"
+      }
+    },
+    {
+      "id": "HBfb7sdg49vsgvjalss",
+      "name": "div",
+      "props": {
+        "className": "mt-10"
+      },
+      "children": ["DSFHgo723fb"]
+    },
+    {
+      "id": "DSFHgo723fb",
+      "name": "WhySpaceMemberList",
+      "acceptsAfter": false,
+      "props": {
+        "space": "$space"
+      }
+    }
+  ]
+}

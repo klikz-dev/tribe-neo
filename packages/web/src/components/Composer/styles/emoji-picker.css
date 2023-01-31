@@ -1,0 +1,10 @@
+.emoji-mart-scroll > div {
+  margin-right: 0;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.emoji-mart-anchor-icon {
+  display: flex;
+  justify-content: center;
+}

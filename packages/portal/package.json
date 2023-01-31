@@ -1,0 +1,85 @@
+{
+  "name": "@tribeplatform/portal",
+  "version": "0.1.0",
+  "description": "",
+  "keywords": [],
+  "author": "Tribeplatform",
+  "homepage": "https://developers.tribeplatform.com",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": "^16.13.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/tribeplatform/tribe-neo.git"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./components": "./dist/components/index.js",
+    "./hooks": "./dist/hooks/index.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/index.d.ts"
+      ],
+      "components": [
+        "dist/components/index.d.ts"
+      ],
+      "hooks": [
+        "dist/hooks/index.d.ts"
+      ]
+    }
+  },
+  "scripts": {
+    "clean": "tsc --build --clean && rimraf dist",
+    "dev": "vite",
+    "serve": "vite preview",
+    "build": "tsc && vite build --outDir dist/client && make",
+    "serve:prod": "NODE_ENV=production node build/server.mjs",
+    "test": "jest --env=jsdom --passWithNoTests",
+    "test:watch": "yarn test --watch",
+    "lint": "eslint src --ext .ts,.tsx --config ../../.eslintrc.js"
+  },
+  "dependencies": {
+    "@tribeplatform/gql-client": "*",
+    "@tribeplatform/react-sdk": "*",
+    "@tribeplatform/react-ui-kit": "*",
+    "ejs": "^3.1.6",
+    "jwt-decode": "^3.1.1",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.merge": "^4.6.2",
+    "react-hook-form": "^7.15.1",
+    "wouter": "^2.7.4"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@loadable/babel-plugin": "^5.13.2",
+    "@tailwindcss/forms": "^0.4.0",
+    "autoprefixer": "^10.4.0",
+    "cssnano": "^5.0.11",
+    "postcss": "^8.4.4",
+    "tailwindcss": "^3.0.1"
+  },
+  "peerDependencies": {
+    "@babel/core": "*",
+    "@vitejs/plugin-react-refresh": "*",
+    "autoprefixer": "*",
+    "postcss": "*",
+    "react": "*",
+    "react-dom": "*",
+    "vite": "*",
+    "vite-tsconfig-paths": "*"
+  },
+  "peerDependenciesMeta": {
+    "@babel/core": {
+      "optional": true
+    }
+  }
+}

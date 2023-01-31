@@ -1,0 +1,209 @@
+# ╭─[local templates] ────────────────────────────────╮
+# │
+.deployPortalTemplate:
+  extends:
+    - .deployTemplate
+  before_script:
+    - |
+      if [[ $FREEZE_PORTAL_DEPLOYMENTS ]]; then
+        if [[ ! $CI_JOB_MANUAL ]]; then
+          export FREEZED=true
+        fi
+      fi
+  needs: &deploy-needs
+    - prepare:env
+    - portal:build
+    - job: portal:publish:assets
+      artifacts: false
+    - job: portal:publish:image
+      artifacts: false
+# ├───────────────────────────────────────────────────
+.notifyPortalTemplate:
+  extends:
+    - .notifyTemplate
+  variables:
+    PRODUCT_NAME: Portal
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_PORTAL
+# │
+# ╰───────────────────────────────────────────────────╯
+
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍ Pipeline Stages ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+# ╭─ Build ───────────────────────────────────────────╮
+# │
+portal:build:
+  extends:
+    - .buildTemplate
+    - .env.portal.build
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_PORTAL
+    - if: $IS_MR
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Publish ─────────────────────────────────────────╮
+# ├───/assets ────────────────────────────────────────
+# │
+portal:publish:assets:
+  extends:
+    - .publishAssetsTemplate
+  variables:
+    LOCAL_BUILD_PATH: packages/portal/build/client/assets
+    REMOTE_BUILD_PATH: portal/$REAL_BUILD_VERSION/assets
+  needs:
+    - prepare:env
+    - portal:build
+    - job: hotfix
+      optional: true
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_PORTAL
+# │
+# ├───/image ─────────────────────────────────────────
+# │
+portal:publish:image:
+  extends:
+    - .publishImageTemplate
+    - .env.portal.common
+  needs:
+    - prepare:env
+    - portal:build
+    - job: hotfix
+      optional: true
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_PORTAL
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ K8s Deployments ─────────────────────────────────╮
+# ├───/dev ───────────────────────────────────────────
+# │
+portal:deploy:dev:
+  stage: deploy:dev
+  extends:
+    - .deployPortalTemplate
+    - .env.portal.dev
+  rules:
+    - if: $IS_DEFAULT && $FREEZE_PORTAL_DEPLOYMENTS
+      when: manual
+    - if: $IS_DEFAULT
+# │
+# ├───/staging ───────────────────────────────────────
+# │
+portal:deploy:staging:
+  stage: deploy:staging
+  extends:
+    - .deployPortalTemplate
+    - .env.portal.staging
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_PORTAL
+      when: manual # TODO: Delegate to canary when available
+# │
+# ├───/promote ────────────────────────────────────────
+# │
+portal:promote:
+  extends:
+    - .promoteTemplate
+  variables:
+    LOCAL_PACKAGE_NAME: portal
+  needs:
+    - job: portal:publish:assets
+      artifacts: false
+    - job: portal:publish:image
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_PORTAL
+      when: manual
+# │
+# ├───/production ────────────────────────────────────
+# │
+portal:deploy:prod:
+  stage: deploy:prod
+  extends:
+    - .deployPortalTemplate
+    - .env.portal.prod
+  needs:
+    - *deploy-needs
+    - job: portal:promote
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_PORTAL
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Release Notifications ───────────────────────────╮
+# ├───/dev ───────────────────────────────────────────
+# │
+portal:notify:dev:
+  extends:
+    - .notifyPortalTemplate
+  needs:
+    - prepare:env
+    - portal:build
+    - portal:deploy:dev
+  variables:
+    CURRENT_ENV: Dev
+    CURRENT_JOB: portal:deploy:dev
+    NEXT_ENV: Staging
+    NEXT_JOB: portal:deploy:staging
+    SKIP_NOTIFY: $PORTAL_BUILD_REUSED
+  rules:
+    - if: $IS_DEFAULT
+# │
+# ├───/staging ───────────────────────────────────────
+# │
+portal:notify:staging:
+  extends:
+    - .notifyPortalTemplate
+  needs:
+    - prepare:env
+    - portal:deploy:staging
+  variables:
+    CURRENT_ENV: Staging
+    CURRENT_JOB: portal:deploy:staging
+    NEXT_ENV: Beta
+    NEXT_JOB: portal:promote
+# │
+# ├───/beta ──────────────────────────────────────────
+# │
+portal:notify:beta:
+  extends:
+    - .notifyPortalTemplate
+  needs:
+    - prepare:env
+    - portal:promote
+  variables:
+    CURRENT_ENV: Beta
+    CURRENT_JOB: ""
+    NEXT_ENV: Prod
+    NEXT_JOB: portal:deploy:prod
+# │
+# ├───/production ────────────────────────────────────
+# │
+portal:notify:prod:
+  extends:
+    - .notifyPortalTemplate
+  needs:
+    - prepare:env
+    - portal:deploy:prod
+  variables:
+    CURRENT_ENV: Prod
+    CURRENT_JOB: portal:deploy:prod
+    NEXT_ENV: ""
+    NEXT_JOB: ""
+# │
+# ╰───────────────────────────────────────────────────╯
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍

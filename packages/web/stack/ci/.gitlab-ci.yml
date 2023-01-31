@@ -1,0 +1,315 @@
+# ╭─[local templates] ────────────────────────────────╮
+# │
+.webDeployNeeds: &deploy-needs
+    - prepare:env
+    - job: web:publish:assets
+      artifacts: false
+    - job: web:publish:image
+      artifacts: true
+# ├───────────────────────────────────────────────────
+.deployWebTemplate:
+  extends:
+    - .deployTemplate
+  before_script:
+    - |
+      if [[ $FREEZE_WEB_DEPLOYMENTS ]]; then
+        if [[ ! $CI_JOB_MANUAL ]]; then
+          export FREEZED=true
+        fi
+      fi
+  needs:
+    - *deploy-needs
+    - web:build
+# ├───────────────────────────────────────────────────
+.deployWebReviewTemplate:
+  image: tribeplatform/tribecd:latest
+  extends:
+    - .commonProperty
+    - .disableCache
+  needs:
+    - *deploy-needs
+    - web:build:review
+# ├───────────────────────────────────────────────────
+.publishWebTemplate:
+  needs:
+    - prepare:env
+    - job: web:build
+      optional: true
+    - job: web:build:review
+      optional: true
+    - job: hotfix
+      optional: true
+      artifacts: false
+    - job: web:review
+      optional: true
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_WEB
+    - if: $IS_MR
+# ├───────────────────────────────────────────────────
+.notifyWebTemplate:
+  extends:
+    - .notifyTemplate
+  variables:
+    PRODUCT_NAME: Web
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_WEB
+# │
+# ╰───────────────────────────────────────────────────╯
+
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍ Pipeline Stages ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
+# ╭─ Build ───────────────────────────────────────────╮
+# │
+web:build:
+  extends:
+    - .buildTemplate
+    - .env.web.build
+  rules:
+    - if: $IS_DEFAULT
+    - if: $IS_HOTFIX_WEB
+# ├───/review ────────────────────────────────────────
+web:build:review:
+  extends:
+    - web:build
+    - .env.web.review
+  variables:
+    FORCE_INLINE_CONFIGS: "true"
+    DEBUG_CONFIGS: "true"
+  rules:
+    - if: $IS_MR
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Intermediate Triggers ───────────────────────────╮
+# ├───/review ────────────────────────────────────────
+# │
+web:review:
+  stage: trigger
+  extends:
+    - .publishTemplate
+    - .env.web.review
+  needs:
+    - job: web:build:review
+      artifacts: false
+  script:
+    - echo "Publishing Web App for review ➞ $CI_ENVIRONMENT_NAME"
+  rules:
+    - if: $WEB_REVIEW_AUTO_DEPLOY
+      when: never
+    - if: $IS_MR
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Publish ─────────────────────────────────────────╮
+# ├───/assets ────────────────────────────────────────
+# │
+web:publish:assets:
+  extends:
+    - .publishAssetsTemplate
+    - .publishWebTemplate
+  variables:
+    LOCAL_BUILD_PATH: packages/web/build/public/static
+    REMOTE_BUILD_PATH: neo/$WEB_BUILD_VERSION/static
+# │
+# ├─/image ────────────────────────────────────────────
+# │
+web:publish:image:
+  extends:
+    - .publishImageTemplate
+    - .publishWebTemplate
+    - .env.web.common
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ K8s Deployments ─────────────────────────────────╮
+# ├───/dev ───────────────────────────────────────────
+# │
+web:deploy:dev:
+  stage: deploy:dev
+  environment:
+    name: dev
+    url: https://tribe-neo.dev.tribe.so
+  extends:
+    - .deployWebTemplate
+    - .env.web.dev
+  rules:
+    - if: $IS_DEFAULT && $FREEZE_WEB_DEPLOYMENTS
+      when: manual
+    - if: $IS_DEFAULT
+# │
+# ├───/staging ───────────────────────────────────────
+# │
+web:deploy:staging:
+  stage: deploy:staging
+  extends:
+    - .deployWebTemplate
+    - .env.web.staging
+  environment:
+    name: staging
+    url: https://tribe-neo.staging.tribe.so
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_WEB
+      when: manual # TODO: Delegate to canary when available
+# │
+# ├───/promote ────────────────────────────────────────
+# │
+web:promote:
+  extends:
+    - .promoteTemplate
+  variables:
+    LOCAL_PACKAGE_NAME: web
+  needs:
+    - job: web:publish:assets
+      artifacts: false
+    - job: web:publish:image
+      artifacts: false
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_WEB
+      when: manual
+# │
+# ├───/production ────────────────────────────────────
+# │
+web:deploy:prod:
+  stage: deploy:prod
+  extends:
+    - .deployWebTemplate
+    - .env.web.prod
+  needs:
+    - *deploy-needs
+    - web:build
+    - job: web:promote
+      artifacts: false
+  environment:
+    name: prod
+    url: https://team.tribeplatform.com/
+  rules:
+    - if: $IS_DEFAULT
+      when: manual
+    - if: $IS_HOTFIX_WEB
+      when: manual
+# │
+# ├───/reviews (deploy) ──────────────────────────────
+# │
+web:deploy:review:
+  extends:
+    - .deployWebReviewTemplate
+    - .env.web.review
+  stage: deploy:review
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    url: https://$CI_ENVIRONMENT_SLUG.feature.tribe.so
+    on_stop: web:stop:review
+    auto_stop_in: 2 week
+  script:
+    - tcdi -c
+    - tcdi -u
+  after_script:
+    - |
+      if [[ ! $WEB_REVIEW_AUTO_DEPLOY ]]; then
+        curl -s --request POST --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" \
+        "$CI_API_V4_URL/projects/$CI_PROJECT_ID/variables" --form "key=WEB_REVIEW_AUTO_DEPLOY" --form "environment_scope=$CI_ENVIRONMENT_NAME" --form "value=true" --form "protected=false"
+      fi
+  rules:
+    - if: $IS_MR
+# │
+# ├───/reviews (stop) ────────────────────────────────
+# │
+web:stop:review:
+  extends:
+    - .deployWebReviewTemplate
+    - .env.web.review
+  stage: stop:review
+  needs:
+    - job: web:deploy:review
+      artifacts: false
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - |
+      if [[ $WEB_REVIEW_AUTO_DEPLOY ]]; then
+        curl --request DELETE --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" \
+        "$CI_API_V4_URL/projects/$CI_PROJECT_ID/variables/WEB_REVIEW_AUTO_DEPLOY" --data-urlencode "filter[environment_scope]=$CI_ENVIRONMENT_NAME"
+
+        echo "Removed auto-deploy flag for $CI_ENVIRONMENT_NAME environment"
+      fi
+  script:
+    - tcdi -d
+  rules:
+    - if: $IS_MR
+      when: manual
+# │
+# ╰───────────────────────────────────────────────────╯
+#
+# ╭─ Release Notifications ───────────────────────────╮
+# ├───/dev ───────────────────────────────────────────
+# │
+web:notify:dev:
+  extends:
+    - .notifyWebTemplate
+  needs:
+    - prepare:env
+    - web:build
+    - web:deploy:dev
+  variables:
+    CURRENT_ENV: Dev
+    CURRENT_JOB: web:deploy:dev
+    NEXT_ENV: Staging
+    NEXT_JOB: web:deploy:staging
+    SKIP_NOTIFY: $WEB_BUILD_REUSED
+  rules:
+    - if: $IS_DEFAULT
+# │
+# ├───/staging ───────────────────────────────────────
+# │
+web:notify:staging:
+  extends:
+    - .notifyWebTemplate
+  needs:
+    - prepare:env
+    - web:deploy:staging
+  variables:
+    CURRENT_ENV: Staging
+    CURRENT_JOB: web:deploy:staging
+    NEXT_ENV: Beta
+    NEXT_JOB: web:promote
+# │
+# ├───/beta ──────────────────────────────────────────
+# │
+web:notify:beta:
+  extends:
+    - .notifyWebTemplate
+  needs:
+    - prepare:env
+    - web:promote
+  variables:
+    CURRENT_ENV: Beta
+    CURRENT_JOB: ""
+    NEXT_ENV: Prod
+    NEXT_JOB: web:deploy:prod
+# │
+# ├───/production ────────────────────────────────────
+# │
+web:notify:prod:
+  extends:
+    - .notifyWebTemplate
+  needs:
+    - prepare:env
+    - web:deploy:prod
+  variables:
+    CURRENT_ENV: Prod
+    CURRENT_JOB: web:deploy:prod
+    NEXT_ENV: ""
+    NEXT_JOB: ""
+# │
+# ╰───────────────────────────────────────────────────╯
+# ╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍╍
